@@ -1,0 +1,6 @@
+> add a shotgun that has random bullet spread
+> add background colors flashing to the beat
+> add enemies & blood particles that remain after they die
+> add walls or something, maybe make them move, let blood splash onto them and stay
+
+> add music
