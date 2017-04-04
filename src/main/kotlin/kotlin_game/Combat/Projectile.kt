@@ -14,6 +14,8 @@ class Projectile(var x: Double, var y: Double, val angle: Double) {
     private val xVel = speed * Math.cos(Math.toRadians(angle))
     private val yVel = speed * Math.sin(Math.toRadians(angle))
 
+    var hitSomething = false
+
     fun update() {
         x += xVel
         y += yVel

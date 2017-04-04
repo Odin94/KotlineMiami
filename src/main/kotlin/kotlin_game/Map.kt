@@ -13,6 +13,7 @@ import javax.swing.JPanel
 
 var player = Actor(100.0, 100.0, 64.0, 60.0)
 var projectiles: MutableList<Projectile> = ArrayList()
+var enemies: MutableList<Actor> = ArrayList()
 
 class Map : JPanel() {
 
@@ -25,6 +26,8 @@ class Map : JPanel() {
     private val img: Image by lazy { loadImage() }
 
     init {
+        enemies.add(Actor(300.0, 100.0, 64.0, 60.0))
+
         addMouseListener(gameInput)
         addMouseMotionListener(gameInput)
     }
@@ -39,8 +42,13 @@ class Map : JPanel() {
     fun update() {
         eclipseDrawer.update()
         updateProjectiles()
+        updateEnemies()
         updateActor(player)
     }
+
+    //-------------------------------------------------//
+    //                  Updates                        //
+    //-------------------------------------------------//
 
     fun updateActor(actor: Actor) {
         actor.addAccel()
@@ -48,12 +56,27 @@ class Map : JPanel() {
         actor.updateAngle(gameInput.mouseX, gameInput.mouseY)
     }
 
+    fun updateEnemies() {
+        for (enemy in enemies) {
+            //TODO enemy controls
+            enemy.addAccel()
+            enemy.move()
+        }
+    }
+
     fun updateProjectiles() {
-        projectiles.filter { it.isOffscreen() }
+        projectiles = projectiles.filter { !it.isOffscreen() } as MutableList<Projectile>
 
         for (proj in projectiles) {
             proj.update()
+
+            enemies.filter { collide(it, proj) }.forEach {
+                proj.hitSomething = true
+                // TODO: damage enemy
+            }
         }
+
+        projectiles = projectiles.filter { !it.hitSomething } as MutableList<Projectile>
     }
 
     override fun paintComponent(g: Graphics?) {
@@ -61,6 +84,10 @@ class Map : JPanel() {
 
         draw(g!!)
     }
+
+    //-------------------------------------------------//
+    //                  Draws                          //
+    //-------------------------------------------------//
 
     fun drawActor(actor: Actor, g2d: Graphics2D) {
         val transform = g2d.transform
@@ -78,6 +105,17 @@ class Map : JPanel() {
         }
     }
 
+    fun drawEnemies(g2d: Graphics2D) {
+        val transform = g2d.transform
+
+        for (enemy in enemies) {
+            g2d.rotate(enemy.angle, enemy.centerX, enemy.centerY)
+            g2d.drawImage(img, enemy.x, enemy.y)
+        }
+
+        g2d.transform = transform
+    }
+
     fun draw(g: Graphics) {
         val g2d = g as Graphics2D
 
@@ -87,6 +125,7 @@ class Map : JPanel() {
 
         eclipseDrawer.drawEclipses(g2d)
         drawProjectiles(g2d)
+        drawEnemies(g2d)
         drawActor(player, g2d)
     }
 

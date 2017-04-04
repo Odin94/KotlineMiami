@@ -1,5 +1,7 @@
 package kotlin_game
 
+import kotlin_game.Combat.Projectile
+
 
 fun approachZero(x: Double, step: Double): Double {
     var y = x
@@ -21,4 +23,9 @@ fun toNormalizedDegrees(x: Double): Double {
     if (y < 0) y += 360
 
     return y
+}
+
+fun collide(a: Actor, p: Projectile): Boolean {
+    return a.x + a.w >= p.x && a.x <= p.x + p.w &&
+            a.y + a.h >= p.y && a.y <= p.y + p.h
 }
