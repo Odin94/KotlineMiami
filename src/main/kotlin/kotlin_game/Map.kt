@@ -1,10 +1,8 @@
 package kotlin_game
 
+import kotlin_game.Combat.Projectile
 import kotlin_game.extensions.drawImage
-import java.awt.Graphics
-import java.awt.Graphics2D
-import java.awt.Image
-import java.awt.RenderingHints
+import java.awt.*
 import java.util.concurrent.Executors
 import java.util.concurrent.ScheduledExecutorService
 import java.util.concurrent.ScheduledFuture
@@ -13,9 +11,11 @@ import javax.swing.ImageIcon
 import javax.swing.JPanel
 
 
+var player = Actor(100.0, 100.0, 64.0, 60.0)
+var projectiles: MutableList<Projectile> = ArrayList()
+
 class Map : JPanel() {
 
-    var player = Actor(100.0, 100.0, 64.0, 60.0)
     val gameInput: GameInput = GameInput(this, player)
     val eclipseDrawer = EclipseDrawer()
 
@@ -38,6 +38,7 @@ class Map : JPanel() {
 
     fun update() {
         eclipseDrawer.update()
+        updateProjectiles()
         updateActor(player)
     }
 
@@ -45,6 +46,14 @@ class Map : JPanel() {
         actor.addAccel()
         actor.move()
         actor.updateAngle(gameInput.mouseX, gameInput.mouseY)
+    }
+
+    fun updateProjectiles() {
+        projectiles.filter { it.isOffscreen() }
+
+        for (proj in projectiles) {
+            proj.update()
+        }
     }
 
     override fun paintComponent(g: Graphics?) {
@@ -62,6 +71,13 @@ class Map : JPanel() {
         g2d.transform = transform
     }
 
+    fun drawProjectiles(g2d: Graphics2D) {
+        g2d.color = Color.darkGray
+        for (proj in projectiles) {
+            g2d.fillOval(proj.x.toInt(), proj.y.toInt(), proj.w, proj.h)
+        }
+    }
+
     fun draw(g: Graphics) {
         val g2d = g as Graphics2D
 
@@ -70,7 +86,7 @@ class Map : JPanel() {
         g2d.setRenderingHints(renderHints)
 
         eclipseDrawer.drawEclipses(g2d)
-
+        drawProjectiles(g2d)
         drawActor(player, g2d)
     }
 

@@ -25,7 +25,7 @@ class KotlinGaem : JFrame() {
         add(gameMap)
 
         size = Dimension(SCREEN_WIDTH, SCREEN_HEIGHT)
-        title = "kotlin_game"
+        title = "kotlin_gaem"
         defaultCloseOperation = JFrame.EXIT_ON_CLOSE
         setLocationRelativeTo(null)
 

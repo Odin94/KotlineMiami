@@ -13,7 +13,7 @@ fun approachZero(x: Double, step: Double): Double {
     return y
 }
 
-fun toDegrees(x: Double): Double {
+fun toNormalizedDegrees(x: Double): Double {
     var y = x
 
     y = Math.toDegrees(y)

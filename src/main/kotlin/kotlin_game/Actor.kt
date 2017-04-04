@@ -1,5 +1,8 @@
 package kotlin_game
 
+import kotlin_game.Combat.Gun
+import kotlin_game.Combat.Projectile
+
 
 data class Actor(var x: Double, var y: Double, var w: Double, var h: Double,
                  var centerX: Double = x + w / 2, var centerY: Double = y + h / 2,
@@ -11,12 +14,21 @@ data class Actor(var x: Double, var y: Double, var w: Double, var h: Double,
 
     private val rotationSpeed = 10
 
+    var weapon = Gun()
+    var angleInDegrees = Math.toDegrees(angle)
+
+    fun shoot() {
+        //TODO: make projectiles spawn on the weapon's tip instead of player's center
+        val newProjectiles: ArrayList<Projectile> = weapon.shoot(centerX, centerY, angleInDegrees - 90)
+        projectiles = (projectiles + newProjectiles) as ArrayList<Projectile>
+    }
+
     fun updateAngle(mouseX: Int, mouseY: Int) {
 
         tarAngle = Math.atan2(centerY - mouseY, centerX - mouseX) - Math.PI / 2
-        tarAngle = toDegrees(tarAngle)
+        tarAngle = toNormalizedDegrees(tarAngle)
 
-        angle = toDegrees(angle)
+        angle = toNormalizedDegrees(angle)
 
         if (angle < tarAngle) {
             if (Math.abs(angle - tarAngle) < 180) angle += rotationSpeed else angle -= rotationSpeed
@@ -26,6 +38,7 @@ data class Actor(var x: Double, var y: Double, var w: Double, var h: Double,
 
         if (Math.abs(angle - tarAngle) < rotationSpeed * 2) angle = tarAngle
 
+        angleInDegrees = angle
         angle = Math.toRadians(angle)
     }
 

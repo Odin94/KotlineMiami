@@ -68,4 +68,10 @@ class GameInput(panel: JPanel, actor: Actor) : MouseAdapter() {
     override fun mouseClicked(e: MouseEvent?) {
         super.mouseClicked(e)
     }
+
+    override fun mousePressed(e: MouseEvent?) {
+        super.mousePressed(e)
+
+        player.shoot()
+    }
 }
