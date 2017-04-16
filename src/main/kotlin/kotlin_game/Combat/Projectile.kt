@@ -4,7 +4,7 @@ import kotlin_game.SCREEN_HEIGHT
 import kotlin_game.SCREEN_WIDTH
 
 
-class Projectile(var x: Double, var y: Double, val angle: Double) {
+class Projectile(var x: Double, var y: Double, val angle: Double, val damage: Int = 20) {
 
     private val speed = 20.0
 

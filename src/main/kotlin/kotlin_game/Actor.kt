@@ -2,6 +2,7 @@ package kotlin_game
 
 import kotlin_game.Combat.Gun
 import kotlin_game.Combat.Projectile
+import java.lang.Math.sqrt
 
 
 data class Actor(var x: Double, var y: Double, var w: Double, var h: Double,
@@ -10,7 +11,8 @@ data class Actor(var x: Double, var y: Double, var w: Double, var h: Double,
                  var xVel: Double = 0.0, var yVel: Double = 0.0,
                  var maxXVel: Double = 10.0, var maxYVel: Double = 10.0,
                  var xSlowDown: Double = 1.0, var ySlowDown: Double = 1.0,
-                 var angle: Double = 0.0, var tarAngle: Double = 0.0) {
+                 var angle: Double = 0.0, var tarAngle: Double = 0.0,
+                 var health: Int = 100) {
 
     private val rotationSpeed = 10
 
@@ -21,6 +23,11 @@ data class Actor(var x: Double, var y: Double, var w: Double, var h: Double,
         //TODO: make projectiles spawn on the weapon's tip instead of player's center
         val newProjectiles: ArrayList<Projectile> = weapon.shoot(centerX, centerY, angleInDegrees - 90)
         projectiles = (projectiles + newProjectiles) as ArrayList<Projectile>
+    }
+
+    fun takeDamage(proj: Projectile) {
+        // TODO: Add some blinking or blood splatters or something
+        health -= proj.damage
     }
 
     fun updateAngle(mouseX: Int, mouseY: Int) {
@@ -65,5 +72,16 @@ data class Actor(var x: Double, var y: Double, var w: Double, var h: Double,
 
         centerX = x + w / 2
         centerY = y + h / 2
+    }
+
+    fun approachActor(actor: Actor) {
+        val xDist = actor.centerX - centerX
+        val yDist = actor.centerY - centerY
+
+        val vectorLength = sqrt(xDist * xDist + yDist * yDist)
+        val newLength = 0.5
+
+        xAccel = xDist / vectorLength * newLength
+        yAccel = yDist / vectorLength * newLength
     }
 }

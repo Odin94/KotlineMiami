@@ -26,7 +26,7 @@ class Map : JPanel() {
     private val img: Image by lazy { loadImage() }
 
     init {
-        enemies.add(Actor(300.0, 100.0, 64.0, 60.0))
+        enemies.add(Actor(300.0, 100.0, 64.0, 60.0, maxXVel=3.0, maxYVel=3.0))
 
         addMouseListener(gameInput)
         addMouseMotionListener(gameInput)
@@ -58,10 +58,12 @@ class Map : JPanel() {
 
     fun updateEnemies() {
         for (enemy in enemies) {
-            //TODO enemy controls
+            enemy.approachActor(player)
             enemy.addAccel()
             enemy.move()
         }
+
+        enemies = enemies.filter { it.health > 0 } as MutableList<Actor>
     }
 
     fun updateProjectiles() {
@@ -72,7 +74,7 @@ class Map : JPanel() {
 
             enemies.filter { collide(it, proj) }.forEach {
                 proj.hitSomething = true
-                // TODO: damage enemy
+                it.takeDamage(proj)
             }
         }
 
