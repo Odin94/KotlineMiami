@@ -2,18 +2,21 @@ package kotlin_game
 
 import kotlin_game.Combat.Projectile
 import kotlin_game.extensions.drawImage
-import java.awt.*
+import java.awt.Color
+import java.awt.Graphics
+import java.awt.Graphics2D
+import java.awt.RenderingHints
 import java.util.concurrent.Executors
 import java.util.concurrent.ScheduledExecutorService
 import java.util.concurrent.ScheduledFuture
 import java.util.concurrent.TimeUnit
-import javax.swing.ImageIcon
 import javax.swing.JPanel
 
 
 var player = Actor(100.0, 100.0, 64.0, 60.0)
 var projectiles: MutableList<Projectile> = ArrayList()
 var enemies: MutableList<Actor> = ArrayList()
+var bloodSplatters: MutableList<BloodSplatter> = ArrayList()
 
 class Map : JPanel() {
 
@@ -22,8 +25,6 @@ class Map : JPanel() {
 
     val gameLoopExecutor: ScheduledExecutorService = Executors.newSingleThreadScheduledExecutor()
     lateinit var gameLoopExecutorFuture: ScheduledFuture<*>
-
-    private val img: Image by lazy { loadImage() }
 
     init {
         enemies.add(Actor(300.0, 100.0, 64.0, 60.0, maxXVel=3.0, maxYVel=3.0))
@@ -63,6 +64,10 @@ class Map : JPanel() {
             enemy.move()
         }
 
+        for (deadEnemy in enemies.filter { it.health <= 0 }) {
+            deadEnemy.onDeath()
+        }
+
         enemies = enemies.filter { it.health > 0 } as MutableList<Actor>
     }
 
@@ -91,11 +96,17 @@ class Map : JPanel() {
     //                  Draws                          //
     //-------------------------------------------------//
 
+    fun drawBloodSplatters(g2d: Graphics2D) {
+        for (bloodSplatter in bloodSplatters) {
+            g2d.drawImage(Resources.getImage(bloodSplatter.imgName), bloodSplatter.x, bloodSplatter.y)
+        }
+    }
+
     fun drawActor(actor: Actor, g2d: Graphics2D) {
         val transform = g2d.transform
 
         g2d.rotate(actor.angle, actor.centerX, actor.centerY)
-        g2d.drawImage(img, actor.x, actor.y)
+        g2d.drawImage(Resources.getImage("actorImage"), actor.x, actor.y)
 
         g2d.transform = transform
     }
@@ -112,7 +123,7 @@ class Map : JPanel() {
 
         for (enemy in enemies) {
             g2d.rotate(enemy.angle, enemy.centerX, enemy.centerY)
-            g2d.drawImage(img, enemy.x, enemy.y)
+            g2d.drawImage(Resources.getImage("actorImage"), enemy.x, enemy.y)
         }
 
         g2d.transform = transform
@@ -126,14 +137,9 @@ class Map : JPanel() {
         g2d.setRenderingHints(renderHints)
 
         eclipseDrawer.drawEclipses(g2d)
+        drawBloodSplatters(g2d)
         drawProjectiles(g2d)
         drawEnemies(g2d)
         drawActor(player, g2d)
     }
-
-
-    private fun loadImage(): Image {
-        return ImageIcon("res/test.png").image
-    }
-
 }

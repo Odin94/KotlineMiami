@@ -30,6 +30,10 @@ data class Actor(var x: Double, var y: Double, var w: Double, var h: Double,
         health -= proj.damage
     }
 
+    fun onDeath() {
+        bloodSplatters.add(BloodSplatter(x, y))
+    }
+
     fun updateAngle(mouseX: Int, mouseY: Int) {
 
         tarAngle = Math.atan2(centerY - mouseY, centerX - mouseX) - Math.PI / 2
