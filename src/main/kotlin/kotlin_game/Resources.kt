@@ -24,6 +24,8 @@ class Resources {
             for (i in 1..7) {
                 imgs.put("blood$i", getTransparentImage(ImageIcon("res/blood/bloodsplats_000$i.png")))
             }
+            imgs.put("smallBlood", getTransparentImage(ImageIcon("res/blood/smallBlood.png")))
+
             imgs.put("actorImage", getTransparentImage(ImageIcon("res/test.png")))
 
             return imgs

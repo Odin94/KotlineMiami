@@ -6,6 +6,7 @@ import java.awt.Color
 import java.awt.Graphics
 import java.awt.Graphics2D
 import java.awt.RenderingHints
+import java.util.*
 import java.util.concurrent.Executors
 import java.util.concurrent.ScheduledExecutorService
 import java.util.concurrent.ScheduledFuture
@@ -17,6 +18,8 @@ var player = Actor(100.0, 100.0, 64.0, 60.0)
 var projectiles: MutableList<Projectile> = ArrayList()
 var enemies: MutableList<Actor> = ArrayList()
 var bloodSplatters: MutableList<BloodSplatter> = ArrayList()
+
+val rnd = Random()
 
 class Map : JPanel() {
 

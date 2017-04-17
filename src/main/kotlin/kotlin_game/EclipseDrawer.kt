@@ -5,7 +5,6 @@ import java.awt.Color
 import java.awt.Graphics2D
 import java.awt.geom.AffineTransform
 import java.awt.geom.Ellipse2D
-import java.util.*
 import java.util.concurrent.Executors
 import java.util.concurrent.ScheduledExecutorService
 import java.util.concurrent.ScheduledFuture
@@ -23,7 +22,6 @@ class EclipseDrawer {
     private var xMovement = 10.0
     private var yMovement = 0.0
 
-    private var rnd = Random()
     private var maxMovement = 30
     private var minMovement = -30
 

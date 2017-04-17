@@ -26,7 +26,7 @@ data class Actor(var x: Double, var y: Double, var w: Double, var h: Double,
     }
 
     fun takeDamage(proj: Projectile) {
-        // TODO: Add some blinking or blood splatters or something
+        if(rnd.nextInt(2) == 1) bloodSplatters.add(BloodSplatter(proj.x, proj.y, "smallBlood"))
         health -= proj.damage
     }
 
@@ -79,8 +79,12 @@ data class Actor(var x: Double, var y: Double, var w: Double, var h: Double,
     }
 
     fun approachActor(actor: Actor) {
-        val xDist = actor.centerX - centerX
-        val yDist = actor.centerY - centerY
+        approachLocation(actor.centerX, actor.centerY)
+    }
+
+    fun approachLocation(x: Double, y: Double) {
+        val xDist = x - centerX
+        val yDist = y - centerY
 
         val vectorLength = sqrt(xDist * xDist + yDist * yDist)
         val newLength = 0.5

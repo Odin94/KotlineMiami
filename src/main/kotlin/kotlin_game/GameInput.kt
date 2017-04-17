@@ -2,6 +2,7 @@ package kotlin_game
 
 import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
+import java.awt.event.MouseEvent.BUTTON1
 import javax.swing.JComponent
 import javax.swing.JPanel
 import javax.swing.KeyStroke
@@ -72,6 +73,6 @@ class GameInput(panel: JPanel, actor: Actor) : MouseAdapter() {
     override fun mousePressed(e: MouseEvent?) {
         super.mousePressed(e)
 
-        player.shoot()
+        if (e?.button == BUTTON1) player.shoot()
     }
 }
