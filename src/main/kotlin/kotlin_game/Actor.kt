@@ -31,7 +31,7 @@ data class Actor(var x: Double, var y: Double, var w: Double, var h: Double,
     }
 
     fun onDeath() {
-        bloodSplatters.add(BloodSplatter(x, y))
+        bloodSplatters.add(BloodSplatter(centerX, centerY))
     }
 
     fun updateAngle(mouseX: Int, mouseY: Int) {

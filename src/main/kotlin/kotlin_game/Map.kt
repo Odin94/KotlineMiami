@@ -14,12 +14,13 @@ import java.util.concurrent.TimeUnit
 import javax.swing.JPanel
 
 
+val rnd = Random()
+
 var player = Actor(100.0, 100.0, 64.0, 60.0)
 var projectiles: MutableList<Projectile> = ArrayList()
 var enemies: MutableList<Actor> = ArrayList()
 var bloodSplatters: MutableList<BloodSplatter> = ArrayList()
-
-val rnd = Random()
+val enemySpawner = EnemySpawner()
 
 class Map : JPanel() {
 
@@ -30,7 +31,7 @@ class Map : JPanel() {
     lateinit var gameLoopExecutorFuture: ScheduledFuture<*>
 
     init {
-        enemies.add(Actor(300.0, 100.0, 64.0, 60.0, maxXVel=3.0, maxYVel=3.0))
+        enemies.add(Actor(300.0, 100.0, 64.0, 60.0, maxXVel = 3.0, maxYVel = 3.0))
 
         addMouseListener(gameInput)
         addMouseMotionListener(gameInput)
@@ -48,6 +49,7 @@ class Map : JPanel() {
         updateProjectiles()
         updateEnemies()
         updateActor(player)
+        updateEnemySpawner()
     }
 
     //-------------------------------------------------//
@@ -75,8 +77,6 @@ class Map : JPanel() {
     }
 
     fun updateProjectiles() {
-        projectiles = projectiles.filter { !it.isOffscreen() } as MutableList<Projectile>
-
         for (proj in projectiles) {
             proj.update()
 
@@ -86,7 +86,15 @@ class Map : JPanel() {
             }
         }
 
-        projectiles = projectiles.filter { !it.hitSomething } as MutableList<Projectile>
+        projectiles = projectiles.filter { !it.hitSomething && !it.isOffscreen() } as MutableList<Projectile>
+    }
+
+    fun updateEnemySpawner() {
+        enemySpawner.update()
+        if (enemySpawner.spawnTimeHasCome()) {
+            enemies.add(enemySpawner.getNewEnemy())
+            enemySpawner.updateSpawnInterval()
+        }
     }
 
     override fun paintComponent(g: Graphics?) {
@@ -100,8 +108,8 @@ class Map : JPanel() {
     //-------------------------------------------------//
 
     fun drawBloodSplatters(g2d: Graphics2D) {
-        for (bloodSplatter in bloodSplatters) {
-            g2d.drawImage(Resources.getImage(bloodSplatter.imgName), bloodSplatter.x, bloodSplatter.y)
+        for (bloodsplatter in bloodSplatters) {
+            g2d.drawImage(Resources.getImage(bloodsplatter.imgName), bloodsplatter.x, bloodsplatter.y)
         }
     }
 
