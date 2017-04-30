@@ -29,3 +29,8 @@ fun collide(a: Actor, p: Projectile): Boolean {
     return a.x + a.w >= p.x && a.x <= p.x + p.w &&
             a.y + a.h >= p.y && a.y <= p.y + p.h
 }
+
+fun collide(wall: Wall, x: Double, y: Double, w: Double, h: Double): Boolean {
+    NotImplementedError("rotated wall collision not implemented")  // TODO: Implement
+    return false
+}

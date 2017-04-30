@@ -1,6 +1,8 @@
 > add background colors flashing to the beat
-> add walls or something, maybe make them move, let blood splash onto them and stay
-> add enemy corpses
+> add walls or something, maybe make them move
+
+> add blood particles, let them splash onto walls and stay there
+
 > add animations
     (split player into legs and upper body; rotate legs according to movement, upper body according to aim)
 

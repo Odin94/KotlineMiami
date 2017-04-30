@@ -20,6 +20,7 @@ var player = Actor(100.0, 100.0, 64.0, 60.0)
 var projectiles: MutableList<Projectile> = ArrayList()
 var enemies: MutableList<Actor> = ArrayList()
 var bloodSplatters: MutableList<BloodSplatter> = ArrayList()
+var corpses: MutableList<Corpse> = ArrayList()
 val enemySpawner = EnemySpawner()
 
 class Map : JPanel() {
@@ -113,6 +114,12 @@ class Map : JPanel() {
         }
     }
 
+    fun drawCorpses(g2d: Graphics2D) {
+        for (corpse in corpses) {
+            g2d.drawImage(Resources.getImage(corpse.imgName), corpse.x, corpse.y)
+        }
+    }
+
     fun drawActor(actor: Actor, g2d: Graphics2D) {
         val transform = g2d.transform
 
@@ -149,6 +156,7 @@ class Map : JPanel() {
 
         eclipseDrawer.drawEclipses(g2d)
         drawBloodSplatters(g2d)
+        drawCorpses(g2d)
         drawProjectiles(g2d)
         drawEnemies(g2d)
         drawActor(player, g2d)

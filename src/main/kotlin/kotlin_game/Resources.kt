@@ -26,7 +26,8 @@ class Resources {
             }
             imgs.put("smallBlood", getTransparentImage(ImageIcon("res/blood/smallBlood.png")))
 
-            imgs.put("actorImage", getTransparentImage(ImageIcon("res/test.png")))
+            imgs.put("actorImage", getTransparentImage(ImageIcon("res/Actor.png")))
+            imgs.put("corpseImage", getTransparentImage(ImageIcon("res/Corpse.png")))
 
             return imgs
         }
