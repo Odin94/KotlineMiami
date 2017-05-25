@@ -45,3 +45,7 @@ fun collide(wall: Wall, actor: Actor): Boolean {
 fun collide(wall: Wall, proj: Projectile): Boolean {
     return collide(wall, proj.x, proj.y, proj.w.toDouble(), proj.h.toDouble())
 }
+
+fun collide(wall: Wall, bloodPart: BloodParticle): Boolean {
+    return collide(wall, bloodPart.x, bloodPart.y, bloodPart.w, bloodPart.h)
+}

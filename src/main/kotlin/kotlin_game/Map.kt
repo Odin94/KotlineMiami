@@ -22,6 +22,7 @@ var projectiles: MutableList<Projectile> = ArrayList()
 var walls: MutableList<Wall> = ArrayList()
 var enemies: MutableList<Actor> = ArrayList()
 var bloodSplatters: MutableList<BloodSplatter> = ArrayList()
+var bloodParticles: MutableList<BloodParticle> = ArrayList()
 var corpses: MutableList<Corpse> = ArrayList()
 val enemySpawner = EnemySpawner()
 
@@ -55,6 +56,7 @@ class Map : JPanel() {
         updateEnemies()
         updateActor(player)
         updateEnemySpawner()
+        updateBloodParticles()
     }
 
     //-------------------------------------------------//
@@ -88,11 +90,12 @@ class Map : JPanel() {
             enemies.filter { collide(it, proj) }.forEach {
                 proj.hitSomething = true
                 it.takeDamage(proj)
+                bloodParticles.add(BloodParticle(proj.x, proj.y, rnd.nextInt(5).toDouble() + 1, rnd.nextInt(5).toDouble() + 1, proj.xVel, proj.yVel))
             }
 
-            for (wall in walls) {
-                if (collide(wall, proj)) proj.hitSomething = true
-            }
+            walls
+                    .filter { collide(it, proj) }
+                    .forEach { proj.hitSomething = true }
         }
 
         projectiles = projectiles.filter { !it.hitSomething && !it.isOffscreen() && it.active } as MutableList<Projectile>
@@ -104,6 +107,10 @@ class Map : JPanel() {
             enemies.add(enemySpawner.getNewEnemy())
             enemySpawner.updateSpawnInterval()
         }
+    }
+
+    fun updateBloodParticles() {
+        bloodParticles.map { it.update() }
     }
 
     override fun paintComponent(g: Graphics?) {
@@ -120,6 +127,11 @@ class Map : JPanel() {
         for (bloodsplatter in bloodSplatters) {
             g2d.drawImage(Resources.getImage(bloodsplatter.imgName), bloodsplatter.x, bloodsplatter.y)
         }
+    }
+
+    fun drawBloodParticles(g2d: Graphics2D) {
+        g2d.color = Color.red
+        bloodParticles.map { g2d.fillOval(it.x.toInt(), it.y.toInt(), it.w.toInt(), it.h.toInt()) }
     }
 
     fun drawCorpses(g2d: Graphics2D) {
@@ -181,5 +193,6 @@ class Map : JPanel() {
         drawEnemies(g2d)
         drawActor(player, g2d)
         drawWalls(g2d)
+        drawBloodParticles(g2d)
     }
 }

@@ -9,8 +9,8 @@ open class Projectile(var x: Double, var y: Double, val angle: Double, val damag
     open protected val speed = 20.0
 
     // by lazy allows speed to be effectively overridden
-    private val xVel by lazy { speed * Math.cos(Math.toRadians(angle)) }
-    private val yVel by lazy { speed * Math.sin(Math.toRadians(angle)) }
+    val xVel by lazy { speed * Math.cos(Math.toRadians(angle)) }
+    val yVel by lazy { speed * Math.sin(Math.toRadians(angle)) }
 
     var active = true
 
