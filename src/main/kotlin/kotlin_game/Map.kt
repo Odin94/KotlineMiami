@@ -12,12 +12,14 @@ import java.util.concurrent.ScheduledExecutorService
 import java.util.concurrent.ScheduledFuture
 import java.util.concurrent.TimeUnit
 import javax.swing.JPanel
+import kotlin.collections.ArrayList
 
 
 val rnd = Random()
 
-var player = Actor(100.0, 100.0, 64.0, 60.0)
+var player = Actor(SCREEN_CENTER_X.toDouble(), 100.0, 64.0, 60.0)
 var projectiles: MutableList<Projectile> = ArrayList()
+var walls: MutableList<Wall> = ArrayList()
 var enemies: MutableList<Actor> = ArrayList()
 var bloodSplatters: MutableList<BloodSplatter> = ArrayList()
 var corpses: MutableList<Corpse> = ArrayList()
@@ -33,6 +35,8 @@ class Map : JPanel() {
 
     init {
         enemies.add(Actor(300.0, 100.0, 64.0, 60.0, maxXVel = 3.0, maxYVel = 3.0))
+        walls.add(Wall(SCREEN_WIDTH - (25.0 + 64), 100.0, 64.0, 500.0, 0.0))
+        walls.add(Wall(25.0, 100.0, 64.0, 500.0, 0.0))
 
         addMouseListener(gameInput)
         addMouseMotionListener(gameInput)
@@ -85,9 +89,13 @@ class Map : JPanel() {
                 proj.hitSomething = true
                 it.takeDamage(proj)
             }
+
+            for (wall in walls) {
+                if (collide(wall, proj)) proj.hitSomething = true
+            }
         }
 
-        projectiles = projectiles.filter { !it.hitSomething && !it.isOffscreen() } as MutableList<Projectile>
+        projectiles = projectiles.filter { !it.hitSomething && !it.isOffscreen() && it.active } as MutableList<Projectile>
     }
 
     fun updateEnemySpawner() {
@@ -147,6 +155,18 @@ class Map : JPanel() {
         g2d.transform = transform
     }
 
+    fun drawWalls(g2d: Graphics2D) {
+        val transform = g2d.transform
+
+        g2d.color = Color(0, 0, 0, 230)
+        for (wall in walls) {
+            g2d.rotate(wall.angle, wall.centerX, wall.centerY)
+            g2d.fillRect(wall.x.toInt(), wall.y.toInt(), wall.w.toInt(), wall.h.toInt())
+        }
+
+        g2d.transform = transform
+    }
+
     fun draw(g: Graphics) {
         val g2d = g as Graphics2D
 
@@ -160,5 +180,6 @@ class Map : JPanel() {
         drawProjectiles(g2d)
         drawEnemies(g2d)
         drawActor(player, g2d)
+        drawWalls(g2d)
     }
 }

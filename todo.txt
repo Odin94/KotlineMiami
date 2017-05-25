@@ -1,5 +1,9 @@
 > add background colors flashing to the beat
-> add walls or something, maybe make them move
+
+> add collision for rotated walls
+> maybe make walls move, maybe make dents in walls when you shoot them (overlay white or sth)
+
+> make enemies walk around walls
 
 > add blood particles, let them splash onto walls and stay there
 
@@ -9,7 +13,10 @@
 > add music
 
 > add different weapons
-    (make shotgun pellets lose size as they travel and despawn when size hits 0)
+    (long range rifle)
+    (mine-dropper that drops bullets where you stand that damage and maybe explode)
+    (crazy guns with bullets that move in weird patterns)
+    (random gun that shoots random types of bullets)
 
 
 > Refactor Actor, refactor global state (player, projectiles, maybe enemies..?)

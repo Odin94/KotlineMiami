@@ -3,21 +3,34 @@ package kotlin_game.Combat
 import kotlin_game.rnd
 
 
-class Gun {
+open class Gun {
 
-    private val bulletCount = 15
-    private val spreadDegrees = 10
+    open var bulletCount = 1
+
+    open fun shoot(x: Double, y: Double, angle: Double): ArrayList<Projectile> {
+        val projectiles = ArrayList<Projectile>()
+
+        for (i in 1..bulletCount) {
+            projectiles.add(Projectile(x, y, angle))
+        }
+
+        return projectiles
+    }
+}
+
+class Shotgun : Gun() {
+    override var bulletCount = 15
+    private val spreadDegrees = 20
 
     private val minSpread: Int = -(spreadDegrees / 2)
     private val maxSpread: Int = (spreadDegrees / 2)
 
-
-    fun shoot(x: Double, y: Double, angle: Double): ArrayList<Projectile> {
+    override fun shoot(x: Double, y: Double, angle: Double): ArrayList<Projectile> {
         val projectiles = ArrayList<Projectile>()
 
         for (i in 1..bulletCount) {
             val projectileSpread = rnd.nextInt(maxSpread + 1 - minSpread) + minSpread
-            projectiles.add(Projectile(x, y, (angle + projectileSpread)))
+            projectiles.add(ShotgunPellet(x, y, (angle + projectileSpread)))
         }
 
         return projectiles

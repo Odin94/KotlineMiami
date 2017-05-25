@@ -1,7 +1,7 @@
 package kotlin_game
 
-import kotlin_game.Combat.Gun
 import kotlin_game.Combat.Projectile
+import kotlin_game.Combat.Shotgun
 import java.lang.Math.sqrt
 
 
@@ -16,7 +16,7 @@ data class Actor(var x: Double, var y: Double, var w: Double, var h: Double,
 
     private val rotationSpeed = 10
 
-    var weapon = Gun()
+    var weapon = Shotgun()
     var angleInDegrees = Math.toDegrees(angle)
 
     fun shoot() {
@@ -26,8 +26,8 @@ data class Actor(var x: Double, var y: Double, var w: Double, var h: Double,
     }
 
     fun takeDamage(proj: Projectile) {
-        if(rnd.nextInt(2) == 1) bloodSplatters.add(BloodSplatter(proj.x, proj.y, "smallBlood"))
-        health -= proj.damage
+        if (rnd.nextInt(2) == 1) bloodSplatters.add(BloodSplatter(proj.x, proj.y, "smallBlood"))
+        health -= (proj.damage * proj.damage_modifier).toInt()
     }
 
     fun onDeath() {
@@ -72,11 +72,28 @@ data class Actor(var x: Double, var y: Double, var w: Double, var h: Double,
     }
 
     fun move() {
+        handle_wall_collision()
+
         x += xVel
         y += yVel
 
         centerX = x + w / 2
         centerY = y + h / 2
+    }
+
+    fun handle_wall_collision() {
+        for (wall in walls) {
+            while (collide(wall, x + xVel, y, w, h)) {
+                xVel = approachZero(xVel)
+                if (Math.abs(xVel) < 1.0) xVel = 0.0
+                if (xVel == 0.0) break
+            }
+            while (collide(wall, x, y + yVel, w, h)) {
+                yVel = approachZero(yVel)
+                if (Math.abs(yVel) < 1.0) yVel = 0.0
+                if (yVel == 0.0) break
+            }
+        }
     }
 
     fun approachActor(actor: Actor) {
