@@ -1,6 +1,8 @@
 package kotlin_game
 
 import kotlin_game.Combat.Projectile
+import kotlin_game.Particles.BloodParticle
+import kotlin_game.Particles.CorpseParticle
 import kotlin_game.extensions.drawImage
 import java.awt.Color
 import java.awt.Graphics
@@ -23,6 +25,7 @@ var walls: MutableList<Wall> = ArrayList()
 var enemies: MutableList<Actor> = ArrayList()
 var bloodSplatters: MutableList<BloodSplatter> = ArrayList()
 var bloodParticles: MutableList<BloodParticle> = ArrayList()
+var corpseParticles: MutableList<CorpseParticle> = ArrayList()
 var corpses: MutableList<Corpse> = ArrayList()
 val enemySpawner = EnemySpawner()
 
@@ -57,6 +60,7 @@ class Map : JPanel() {
         updateActor(player)
         updateEnemySpawner()
         updateBloodParticles()
+        updateCorpseParticles()
     }
 
     //-------------------------------------------------//
@@ -113,6 +117,11 @@ class Map : JPanel() {
         bloodParticles.map { it.update() }
     }
 
+    fun updateCorpseParticles() {
+        corpseParticles.map { it.update() }
+        corpseParticles = corpseParticles.filter { it.active } as MutableList<CorpseParticle>
+    }
+
     override fun paintComponent(g: Graphics?) {
         super.paintComponent(g)
 
@@ -132,6 +141,11 @@ class Map : JPanel() {
     fun drawBloodParticles(g2d: Graphics2D) {
         g2d.color = Color.red
         bloodParticles.map { g2d.fillOval(it.x.toInt(), it.y.toInt(), it.w.toInt(), it.h.toInt()) }
+    }
+
+    fun drawCorpseParticles(g2d: Graphics2D) {
+        g2d.color = Color.RED
+        corpseParticles.map { g2d.fillOval(it.x.toInt(), it.y.toInt(), it.r.toInt(), it.r.toInt()) }
     }
 
     fun drawCorpses(g2d: Graphics2D) {
@@ -157,14 +171,17 @@ class Map : JPanel() {
     }
 
     fun drawEnemies(g2d: Graphics2D) {
-        val transform = g2d.transform
-
+        //g2d.color = Color.BLACK
         for (enemy in enemies) {
-            g2d.rotate(enemy.angle, enemy.centerX, enemy.centerY)
-            g2d.drawImage(Resources.getImage("actorImage"), enemy.x, enemy.y)
-        }
+            val transform = g2d.transform
 
-        g2d.transform = transform
+            val angle = Math.atan2(player.centerY - enemy.centerY, player.centerX - enemy.centerX) + Math.PI / 2
+            g2d.rotate(angle, enemy.centerX, enemy.centerY)
+            g2d.drawImage(Resources.getImage("actorImage"), enemy.x, enemy.y)
+            //g2d.fillOval(enemy.x.toInt(), enemy.y.toInt(), enemy.w.toInt(), enemy.h.toInt())
+
+            g2d.transform = transform
+        }
     }
 
     fun drawWalls(g2d: Graphics2D) {
@@ -194,5 +211,6 @@ class Map : JPanel() {
         drawActor(player, g2d)
         drawWalls(g2d)
         drawBloodParticles(g2d)
+        drawCorpseParticles(g2d)
     }
 }

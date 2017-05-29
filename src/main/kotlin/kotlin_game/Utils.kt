@@ -1,6 +1,8 @@
 package kotlin_game
 
 import kotlin_game.Combat.Projectile
+import kotlin_game.Particles.BloodParticle
+import kotlin_game.Particles.CorpseParticle
 
 
 fun approachZero(x: Double, step: Double = 1.0): Double {
@@ -48,4 +50,8 @@ fun collide(wall: Wall, proj: Projectile): Boolean {
 
 fun collide(wall: Wall, bloodPart: BloodParticle): Boolean {
     return collide(wall, bloodPart.x, bloodPart.y, bloodPart.w, bloodPart.h)
+}
+
+fun collide(wall: Wall, corpsePart: CorpseParticle): Boolean {
+    return collide(wall, corpsePart.x, corpsePart.y, corpsePart.r, corpsePart.r)
 }

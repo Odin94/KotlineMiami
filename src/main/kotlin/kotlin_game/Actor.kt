@@ -2,6 +2,7 @@ package kotlin_game
 
 import kotlin_game.Combat.Projectile
 import kotlin_game.Combat.Shotgun
+import kotlin_game.Particles.CorpseParticle
 import java.lang.Math.sqrt
 
 
@@ -26,13 +27,17 @@ data class Actor(var x: Double, var y: Double, var w: Double, var h: Double,
     }
 
     fun takeDamage(proj: Projectile) {
-        if (rnd.nextInt(2) == 1) bloodSplatters.add(BloodSplatter(proj.x, proj.y, "smallBlood"))
+        // if (rnd.nextInt(2) == 1) bloodSplatters.add(BloodSplatter(proj.x, proj.y, "smallBlood"))
         health -= (proj.damage * proj.damage_modifier).toInt()
     }
 
     fun onDeath() {
-        bloodSplatters.add(BloodSplatter(centerX, centerY))
+        // bloodSplatters.add(BloodSplatter(centerX, centerY))
         corpses.add(Corpse(x, y))
+
+        for (i in 1..30) {
+            corpseParticles.add(CorpseParticle(centerX, centerY))
+        }
     }
 
     fun updateAngle(mouseX: Int, mouseY: Int) {
