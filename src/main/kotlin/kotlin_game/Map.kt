@@ -39,8 +39,16 @@ class Map : JPanel() {
 
     init {
         enemies.add(Actor(300.0, 100.0, 64.0, 60.0, maxXVel = 3.0, maxYVel = 3.0))
-        walls.add(Wall(SCREEN_WIDTH - (25.0 + 64), 100.0, 64.0, 500.0, 0.0))
-        walls.add(Wall(25.0, 100.0, 64.0, 500.0, 0.0))
+
+        // Right walls
+        walls.add(Wall(SCREEN_WIDTH - (125.0 + 64), 100.0, 64.0, 100.0, 0.0))
+        walls.add(Wall(SCREEN_WIDTH - (125.0 + 64), 300.0, 64.0, 100.0, 0.0))
+        walls.add(Wall(SCREEN_WIDTH - (125.0 + 64), 500.0, 64.0, 100.0, 0.0))
+
+        // Left walls
+        walls.add(Wall(125.0, 100.0, 64.0, 100.0, 0.0))
+        walls.add(Wall(125.0, 300.0, 64.0, 150.0, 0.0))
+        walls.add(Wall(125.0, 550.0, 64.0, 100.0, 0.0))
 
         addMouseListener(gameInput)
         addMouseMotionListener(gameInput)
